@@ -1,0 +1,24 @@
+import mongoose from "mongoose";
+
+const orderSchema = new mongoose.Schema({
+  items: [
+    {
+      product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      },
+      quantity: Number,
+      price: Number
+    }
+  ],
+  totalAmount: {
+    type: Number,
+    required: true
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  }
+}, { timestamps: true });
+
+export default mongoose.model("Order", orderSchema);
