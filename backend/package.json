@@ -9,6 +9,9 @@
     "test": "jest --runInBand --detectOpenHandles",
     "seed": "node src/utils/seed.js"
   },
+  "engines": {
+  "node": "20.0"
+},
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
