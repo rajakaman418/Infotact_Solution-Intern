@@ -7,8 +7,8 @@ import {
   printInvoicePdf,
 } from "../api/order.api";
 import { useCart } from "../context/CartContext";
-import ProductGrid from "../components/pos/ProductGrid";
-import CartPanel from "../components/pos/CartPanel";
+import ProductGrid from "../components/POS/ProductGrid";
+import CartPanel from "../components/POS/CartPanel";
 import AppShell from "../components/layout/AppShell";
 import Topbar from "../components/layout/Topbar";
 
