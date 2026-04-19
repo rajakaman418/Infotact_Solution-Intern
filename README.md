@@ -1,270 +1,312 @@
-####LIVE PREVIEW= https://infotact-solution-intern-1.onrender.com
+# 🧾 Retail POS System (MERN Stack)
+
+A complete **Retail Point of Sale (POS) System** built using **Node.js, Express, MongoDB, Redis, and React (Vite)**.
+
+This system enables **inventory management, order processing, real-time analytics, and invoice generation** in a scalable and production-ready architecture.
+
+---
+
+# 🚀 Features
+
+## 🛒 POS System
+- Add products to cart
+- Real-time cart updates
+- Checkout orders
+- Auto stock deduction
+- Invoice generation (PDF)
+- Print & download invoice
+
+## 📦 Inventory Management
+- Add stock to products
+- Track stock per store
+- Inventory ledger tracking
+- Low stock alerts
+
+## 📊 Dashboard (Real-Time)
+- Total revenue & orders
+- Daily sales trend (charts)
+- Top-selling products
+- Auto-refresh dashboard
+
+## 📋 Orders Management
+- List all orders
+- View single order
+- Refund functionality
+- Order status tracking
+
+## 🏷️ Product Management
+- Full CRUD operations
+- Product variants (size, color, SKU)
+- Pagination & filtering
+
+---
+
+# 🧱 Tech Stack
+
+## 🔙 Backend
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- Redis (Caching)
+- JWT Authentication
+- PDFKit (Invoice)
+
+## 🎨 Frontend
+- React (Vite)
+- Axios
+- Recharts (Charts)
+- Context API (Cart State)
+
+---
+
+# 📁 Project Structure
+
+## Backend
+
+backend/
+  src/
+    config/
+      db.js
+      redis.js
+
+    controllers/
+      auth.controller.js
+      product.controller.js
+      order.controller.js
+      inventory.controller.js
+      report.controller.js
+      invoice.controller.js
+
+    models/
+      User.js
+      Product.js
+      Order.js
+      Inventory.js
 
-🧾 Retail POS System (MERN Stack)
-A full-featured Retail Point of Sale (POS) System built with Node.js, Express, MongoDB, and React (Vite).
-This system supports product management, inventory tracking, order processing, invoice generation, and real-time dashboard analytics.
+    routes/
+      auth.routes.js
+      product.routes.js
+      order.routes.js
+      inventory.routes.js
+      report.routes.js
+      invoice.routes.js
 
-🚀 Features
-🛒 POS (Point of Sale)
+    middleware/
+      auth.middleware.js
 
+    services/
+      invoice.service.js
+      report.service.js
 
-Add products to cart
+    app.js
 
+---
 
-Checkout orders
+## Frontend
 
+frontend/
+  src/
+    api/
+      client.js
+      auth.api.js
+      product.api.js
+      order.api.js
+      inventory.api.js
+      report.api.js
+      dashboard.api.js
 
-Auto stock deduction
+    components/
+      layout/
+        AppShell.jsx
+        Sidebar.jsx
+        Topbar.jsx
 
+      pos/
+        ProductGrid.jsx
+        ProductCard.jsx
+        CartPanel.jsx
+        CartItem.jsx
 
-Invoice generation (PDF)
+      dashboard/
+        StatCard.jsx
 
+    context/
+      CartContext.jsx
 
-Print & download invoice
+    pages/
+      LoginPage.jsx
+      DashboardPage.jsx
+      POSPage.jsx
+      OrdersPage.jsx
+      ProductsPage.jsx
+      AddStockPage.jsx
 
+    routes/
+      AppRouter.jsx
 
-📦 Inventory Management
+    styles/
+      app.css
+      layout.css
+      pos.css
+      dashboard.css
 
+---
 
-Add stock
+# ⚙️ Environment Variables
 
+## Backend (.env)
 
-Track stock per store
+PORT=5000  
+MONGO_URI=your_mongodb_uri  
+JWT_SECRET=your_secret_key  
+REDIS_URL=redis://127.0.0.1:6379  
 
+---
 
-Low stock detection
+# 🐳 Docker Setup (Recommended)
 
+Run MongoDB & Redis:
 
-Inventory ledger tracking
+docker run -d -p 27017:27017 --name mongo mongo  
+docker run -d -p 6379:6379 --name redis redis  
 
+I have not added yet. Looking to add it on Future
+---
 
-📊 Dashboard
+# ▶️ Running the Project
 
+## 1️⃣ Backend
 
-Sales summary
+cd backend  
+npm install  
+npm start  
 
+Runs on:  
+http://localhost:5000  
 
-Daily sales trend (charts)
+---
 
+## 2️⃣ Frontend
 
-Top-selling products
+cd frontend  
+npm install  
+npm run dev  
 
+Runs on:  
+http://localhost:5173  
 
-Auto-refresh (real-time updates)
+---
 
+# 🔗 API Integration
 
-📋 Orders
+## Axios Client
 
+const client = axios.create({
+  baseURL: "http://localhost:5000/api",
+});
 
-Order list
+## Auth Flow
 
+1. Login → receive JWT token  
+2. Store token in localStorage  
+3. Axios attaches token automatically  
 
-View single order
+Authorization: Bearer TOKEN  
 
+---
 
-Refund orders
+# 🧪 API Endpoints
 
+## Auth
+POST /api/auth/login  
 
-Status tracking (completed, refunded)
+## Products
+GET    /api/products  
+POST   /api/products  
+PUT    /api/products/:id  
+DELETE /api/products/:id  
 
+## Orders
+POST /api/orders/checkout  
+GET  /api/orders  
+GET  /api/orders/:id  
+POST /api/orders/:id/refund  
 
-🏷️ Products
+## Inventory
+POST /api/inventory/add  
+GET  /api/inventory/stock  
+GET  /api/inventory/ledger  
 
+## Reports
+GET /api/reports/sales  
 
-Create, Read, Update, Delete (CRUD)
+## Invoice
+GET /api/invoices/:orderId/pdf  
 
+---
 
-Variants (size, color, SKU)
+# 📊 Dashboard
 
+- Sales summary
+- Revenue tracking
+- Charts (Recharts)
+- Top products
+- Auto-refresh (15 seconds)
 
-Pagination & filtering
+---
 
+# 🧾 Invoice System
 
+- PDF generation
+- Download invoice
+- Print invoice
+- Linked to orders
 
-🧱 Tech Stack
-Backend
+---
 
+# 🔄 Real-Time Updates
 
-Node.js
+- Dashboard auto-refresh
+- Cart updates instantly
+- Inventory updates after checkout
 
+---
 
-Express.js
+# ⚠️ Common Issues
 
+## Redis Error
+ECONNREFUSED 127.0.0.1:6379  
+→ Start Redis or Docker container  
 
-MongoDB (Mongoose)
-
-
-Redis (caching)
-
-
-JWT Authentication
-
-
-PDFKit (invoice generation)
-
-
-Frontend
-
-
-React (Vite)
-
-
-Axios
-
-
-Recharts (charts)
-
-
-Context API (cart state)
-
-
-
-📁 Project Structure
-backend/  src/    controllers/    models/    routes/    services/    config/    middleware/    app.jsfrontend/  src/    api/    components/    context/    pages/    routes/    styles/
-
-⚙️ Environment Variables
-Backend .env
-PORT=5000
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_secret_key
-REDIS_URL=redis://127.0.0.1:6379
-
-▶️ Running the Project
-1️⃣ Backend
-cd backendnpm installnpm start
-Server runs at:
-http://localhost:5000
-
-2️⃣ Frontend
-cd frontendnpm installnpm run dev
-Frontend runs at:
-http://localhost:5173
-
-🔗 API Base URL
-http://localhost:5000/api
-
-🔑 Authentication Flow
-
-
-Login → receive JWT token
-
-
-Store token in localStorage
-
-
-Axios automatically attaches token:
-
-
-Authorization: Bearer TOKEN
-
-🧪 Key API Endpoints
-Auth
-POST /api/auth/login
-Products
-GET    /api/productsPOST   /api/productsPUT    /api/products/:idDELETE /api/products/:id
-Orders
-POST /api/orders/checkoutGET  /api/ordersGET  /api/orders/:idPOST /api/orders/:id/refund
-Inventory
-POST /api/inventory/addGET  /api/inventory/stockGET  /api/inventory/ledger
-Reports
-GET /api/reports/sales
-Invoice
-GET /api/invoices/:orderId/pdf
-
-📊 Dashboard Features
-
-
-Total revenue
-
-
-Total orders
-
-
-Today’s revenue
-
-
-Low stock count
-
-
-Daily sales chart
-
-
-Top products chart
-
-
-
-🧾 Invoice Features
-
-
-PDF generation
-
-
-Download invoice
-
-
-Print invoice
-
-
-Linked to order
-
-
-
-🔄 Real-Time Updates
-Dashboard auto-refresh every 15 seconds.
-
-⚠️ Common Issues & Fixes
-Redis Error
-ECONNREFUSED 127.0.0.1:6379
-👉 Start Redis or disable cache fallback.
-
-CORS Error
-Ensure backend has:
+## CORS Error
+Ensure backend:
 app.use(cors());
 
-Unauthorized (401)
+## 401 Unauthorized
+→ Token missing or expired  
 
+## Charts Not Showing
+→ Ensure data exists  
+→ Add stroke / fill colors  
 
-Token missing or expired
+---
 
+# 🏁 Future Improvements
 
-Check Authorization header
+- Toast notifications
+- Advanced analytics filters
+- Thermal receipt printing
+- Multi-store UI
+- WebSocket real-time updates
 
+---
 
+# 👨‍💻 Author
 
-Chart Not Showing
-
-
-Ensure data exists
-
-
-Add stroke / fill colors in charts
-
-
-
-🏁 Future Improvements
-
-
-🔔 Toast notifications
-
-
-📉 Advanced analytics filters
-
-
-🧾 Thermal receipt printing
-
-
-📦 Multi-store support UI
-
-
-📊 Real-time WebSocket updates
-
-
-
-👨‍💻 Author
 Dibakar Rajak
 
-⭐ If you like this project
-Give it a ⭐ on GitHub!
+---
+
 
 
 
