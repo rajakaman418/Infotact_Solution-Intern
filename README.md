@@ -1,3 +1,5 @@
+####LIVE PREVIEW= https://infotact-solution-intern-1.onrender.com
+
 🧾 Retail POS System (MERN Stack)
 A full-featured Retail Point of Sale (POS) System built with Node.js, Express, MongoDB, and React (Vite).
 This system supports product management, inventory tracking, order processing, invoice generation, and real-time dashboard analytics.
