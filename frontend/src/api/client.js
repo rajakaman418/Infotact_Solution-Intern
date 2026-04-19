@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const client = axios.create({
-  baseURL: "https://infotact-solution-intern.onrender.com",
+  baseURL: "https://infotact-solution-intern.onrender.com/api",
 });
 
 client.interceptors.request.use((config) => {
