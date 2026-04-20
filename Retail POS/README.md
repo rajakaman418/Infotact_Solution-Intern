@@ -161,6 +161,7 @@ PORT=5000
 MONGO_URI=your_mongodb_uri  
 JWT_SECRET=your_secret_key  
 REDIS_URL=redis://127.0.0.1:6379  
+REDIS IS DISABLED FOR NOW. IT WILL BE ADDED IN FUTURE.
 
 ---
 
@@ -171,7 +172,7 @@ Run MongoDB & Redis:
 docker run -d -p 27017:27017 --name mongo mongo  
 docker run -d -p 6379:6379 --name redis redis  
 
-I have not added yet. Looking to add it on Future
+I HAVE NOT ADDED YET. IT WILL BE ADDED IN FUTURE
 ---
 
 # ▶️ Running the Project
