@@ -66,12 +66,7 @@ export default function Sidebar() {
             </NavLink>
           )}
 
-          {role === "system_admin" && (
-            <NavLink to="/register" className={navClass}>
-              <UserPlus size={18} />
-              <span>Register User</span>
-            </NavLink>
-          )}
+        
         </nav>
       </div>
 
