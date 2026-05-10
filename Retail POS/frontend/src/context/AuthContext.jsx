@@ -13,10 +13,13 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const data = await loginUser({ email, password });
+
     localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user || {}));
+    localStorage.setItem("user", JSON.stringify(data.user));
+
     setToken(data.token);
-    setUser(data.user || {});
+    setUser(data.user);
+
     return data;
   };
 
@@ -25,6 +28,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("user");
     setToken("");
     setUser(null);
+    window.location.href = "/";
   };
 
   const value = useMemo(() => ({ user, token, login, logout }), [user, token]);
@@ -35,5 +39,3 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
-
-
