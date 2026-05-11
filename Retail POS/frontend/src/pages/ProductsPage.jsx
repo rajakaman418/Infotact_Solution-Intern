@@ -5,7 +5,8 @@ import {
   getProducts,
   createProduct,
   updateProduct,
-  deleteProduct,
+  archiveProduct,
+  unarchiveProduct,
 } from "../api/product.api";
 
 const initialForm = {
@@ -15,10 +16,12 @@ const initialForm = {
   category: "",
   variants: [
     {
+      _id: "",
       sku: "",
       price: "",
       size: "",
       color: "",
+      costPrice: 0,
     },
   ],
 };
@@ -53,6 +56,7 @@ export default function ProductsPage() {
         q: customQ || undefined,
         category: customCategory || undefined,
         brand: customBrand || undefined,
+        isActive: "all",
       });
 
       setProducts(data.items || []);
@@ -82,25 +86,22 @@ export default function ProductsPage() {
   };
 
   const openEditForm = (product) => {
-    const firstVariant = product.variants?.[0] || {
-      sku: "",
-      price: "",
-      size: "",
-      color: "",
-    };
+    const firstVariant = product?.variants?.[0] || {};
 
     setEditingProduct(product);
     setForm({
-      title: product.title || "",
-      description: product.description || "",
-      brand: product.brand || "",
-      category: product.category || "",
+      title: product?.title || "",
+      description: product?.description || "",
+      brand: product?.brand || "",
+      category: product?.category || "",
       variants: [
         {
+          _id: firstVariant._id || "",
           sku: firstVariant.sku || "",
           price: firstVariant.price || "",
           size: firstVariant.size || "",
           color: firstVariant.color || "",
+          costPrice: firstVariant.costPrice || 0,
         },
       ],
     });
@@ -132,12 +133,23 @@ export default function ProductsPage() {
     try {
       setSubmitting(true);
 
+      const variant = form.variants[0];
+
       const payload = {
-        ...form,
+        title: form.title.trim(),
+        description: form.description.trim(),
+        brand: form.brand.trim(),
+        category: form.category.trim(),
+        isActive: true,
         variants: [
           {
-            ...form.variants[0],
-            price: Number(form.variants[0].price),
+            ...(variant._id ? { _id: variant._id } : {}),
+            sku: variant.sku.trim(),
+            price: Number(variant.price),
+            size: variant.size.trim(),
+            color: variant.color.trim(),
+            costPrice: Number(variant.costPrice || 0),
+            isActive: true,
           },
         ],
       };
@@ -155,22 +167,38 @@ export default function ProductsPage() {
       setForm(initialForm);
       await loadProducts(page, q, category, brand);
     } catch (error) {
-      alert(error?.response?.data?.message || "Failed to save product");
+      const message =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        error?.message ||
+        "Failed to save product";
+
+      alert(message);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleArchive = async (id) => {
     const confirmed = window.confirm("Archive this product?");
     if (!confirmed) return;
 
     try {
-      await deleteProduct(id);
+      await archiveProduct(id);
       alert("Product archived successfully");
       await loadProducts(page, q, category, brand);
     } catch (error) {
       alert(error?.response?.data?.message || "Failed to archive product");
+    }
+  };
+
+  const handleUnarchive = async (id) => {
+    try {
+      await unarchiveProduct(id);
+      alert("Product unarchived successfully");
+      await loadProducts(page, q, category, brand);
+    } catch (error) {
+      alert(error?.response?.data?.message || "Failed to unarchive product");
     }
   };
 
@@ -224,25 +252,62 @@ export default function ProductsPage() {
           </div>
         ) : (
           <div className="product-grid">
-            {products.map((product) => {
-              const firstVariant = product.variants?.[0];
+            {products.filter(Boolean).map((product) => {
+              const firstVariant = product?.variants?.[0] || null;
+              const isArchived = product.isActive === false;
 
               return (
-                <div key={product._id} className="product-card">
+                <div
+                  key={product._id}
+                  className={`product-card ${
+                    isArchived ? "archived-product" : ""
+                  }`}
+                >
                   <div className="product-card-head">
-                    <h3>{product.title}</h3>
-                    <span className="badge">{product.category}</span>
+                    <div>
+                      <h3>{product.title || "Untitled Product"}</h3>
+                      <p className="muted-text">{product.brand || "No brand"}</p>
+                    </div>
+
+                    <span className="badge">
+                      {product.category || "Uncategorized"}
+                    </span>
                   </div>
 
-                  <p className="muted-text">{product.brand}</p>
-                  <p className="product-description">{product.description}</p>
+                  {isArchived && (
+                    <span className="status-pill status-cancelled">
+                      Archived
+                    </span>
+                  )}
 
-                  {firstVariant && (
+                  <p className="product-description">
+                    {product.description || "No description available"}
+                  </p>
+
+                  {firstVariant ? (
                     <div className="variant-box">
-                      <div>SKU: {firstVariant.sku}</div>
-                      <div>₹ {firstVariant.price}</div>
-                      <div>
-                        {firstVariant.size || "-"} / {firstVariant.color || "-"}
+                      <div className="variant-row">
+                        <span>SKU</span>
+                        <strong>{firstVariant.sku || "-"}</strong>
+                      </div>
+
+                      <div className="variant-row">
+                        <span>Price</span>
+                        <strong>₹ {firstVariant.price ?? 0}</strong>
+                      </div>
+
+                      <div className="variant-row">
+                        <span>Variant</span>
+                        <strong>
+                          {firstVariant.size || "-"} /{" "}
+                          {firstVariant.color || "-"}
+                        </strong>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="variant-box">
+                      <div className="variant-row">
+                        <span>No variant available</span>
                       </div>
                     </div>
                   )}
@@ -255,12 +320,21 @@ export default function ProductsPage() {
                       Edit
                     </button>
 
-                    <button
-                      className="danger-btn"
-                      onClick={() => handleDelete(product._id)}
-                    >
-                      Archive
-                    </button>
+                    {isArchived ? (
+                      <button
+                        className="primary-btn"
+                        onClick={() => handleUnarchive(product._id)}
+                      >
+                        Unarchive
+                      </button>
+                    ) : (
+                      <button
+                        className="danger-btn"
+                        onClick={() => handleArchive(product._id)}
+                      >
+                        Archive
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -351,6 +425,15 @@ export default function ProductsPage() {
               />
 
               <input
+                type="number"
+                placeholder="Cost Price"
+                value={form.variants[0].costPrice}
+                onChange={(e) =>
+                  handleVariantChange("costPrice", e.target.value)
+                }
+              />
+
+              <input
                 type="text"
                 placeholder="Size"
                 value={form.variants[0].size}
@@ -373,7 +456,11 @@ export default function ProductsPage() {
                   Cancel
                 </button>
 
-                <button type="submit" className="primary-btn" disabled={submitting}>
+                <button
+                  type="submit"
+                  className="primary-btn"
+                  disabled={submitting}
+                >
                   {submitting
                     ? "Saving..."
                     : editingProduct
