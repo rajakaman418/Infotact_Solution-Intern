@@ -1,3 +1,4 @@
+LIVE PREVIEW= https://foodie-frontend-oxgc.onrender.com
 # FoodieHub — Integrated Food Delivery & Dine-Out Hospitality Platform
 
 ## 🚀 Project Overview
